@@ -7,17 +7,28 @@ const filterInput = document.querySelector('.filter-repos');
 
 // get information from github profile
 const getProfile = async () => {
-    const res = await fetch(
-        `https://api.github.com/users/${username}`
-        // {
-        //     headers: {
-        //         Accept: 'application/vnd.github+json',
-        //         Authorization: 'token your-personal-access-token-here'
-        //     }
-        // }
-    );
-    const profile = await res.json();
-    displayProfile(profile);
+    try {
+        const res = await fetch(
+            `https://api.github.com/users/${username}`
+            // {
+            //     headers: {
+            //         Accept: 'application/vnd.github+json',
+            //         Authorization: 'token your-personal-access-token-here'
+            //     }
+            // }
+        );
+        
+        if (!res.ok) {
+            throw new Error(`Error ${res.status}: ${res.statusText}`);
+        }
+        
+        const profile = await res.json();
+        displayProfile(profile);
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        const userInfo = document.querySelector('.user-info');
+        userInfo.innerHTML = `<p>Error al cargar el perfil: ${error.message}</p>`;
+    }
 };
 getProfile();
 
@@ -26,10 +37,10 @@ const displayProfile = (profile) => {
     const userInfo = document.querySelector('.user-info');
     userInfo.innerHTML = `
         <figure>
-            <img alt="user avatar" src=${profile.avatar_url} />
+            <img alt="user avatar" src="${profile.avatar_url}" />
         </figure>
         <div>
-            <h2><a href=${profile.blog || '#'}><strong>${profile.name || 'Sin nombre'} - ${profile.login}</strong></a></h2>
+            <h2><a href="${profile.blog || '#'}"><strong>${profile.name || 'Sin nombre'} - ${profile.login}</strong></a></h2>
             <p>${profile.bio || 'Sin biografía disponible'}</p>
             <p>
                 Followers: <strong>${profile.followers || 0}</strong>
@@ -46,25 +57,36 @@ const displayProfile = (profile) => {
 
 // get list of user's public repos
 const getRepos = async () => {
-    let repos = [];
-    let res;
-    for (let i = 1; i <= maxPages; i++) {
-        res = await fetch(
-            `https://api.github.com/users/${username}/repos?&sort=pushed&per_page=100&page=${i}`
-            // {
-            //     headers: {
-            //         Accept: 'application/vnd.github+json',
-            //         Authorization:
-            //             'token your-personal-access-token-here'
-            //     }
-            // }
-        );
-        let data = await res.json();
-        repos = repos.concat(data);
+    try {
+        let repos = [];
+        let res;
+        for (let i = 1; i <= maxPages; i++) {
+            res = await fetch(
+                `https://api.github.com/users/${username}/repos?&sort=pushed&per_page=100&page=${i}`
+                // {
+                //     headers: {
+                //         Accept: 'application/vnd.github+json',
+                //         Authorization:
+                //             'token your-personal-access-token-here'
+                //     }
+                // }
+            );
+            
+            if (!res.ok) {
+                throw new Error(`Error ${res.status}: ${res.statusText}`);
+            }
+            
+            let data = await res.json();
+            repos = repos.concat(data);
+        }
+        repos.sort((a, b) => b.forks_count - a.forks_count);
+        repos.sort((a, b) => b.stargazers_count - a.stargazers_count);
+        displayRepos(repos);
+    } catch (error) {
+        console.error('Error fetching repos:', error);
+        const repoList = document.querySelector('.repo-list');
+        repoList.innerHTML = `<li>Error al cargar los repositorios: ${error.message}</li>`;
     }
-    repos.sort((a, b) => b.forks_count - a.forks_count);
-    repos.sort((a, b) => b.stargazers_count - a.stargazers_count);
-    displayRepos(repos);
 };
 getRepos();
 
@@ -105,12 +127,12 @@ const displayRepos = (repos) => {
 
         if (repo.homepage && repo.homepage !== '') {
             listItem.innerHTML += `<br />
-            <a class="link-btn" href=${repo.html_url}>${devicons['Github']} Code</a>
-            <a class="link-btn" href=${repo.homepage}>${devicons['Chrome']} Live</a>
+            <a class="link-btn" href="${repo.html_url}">${devicons['Github']} Code</a>
+            <a class="link-btn" href="${repo.homepage}">${devicons['Chrome']} Live</a>
             <br />`;
         } else {
             listItem.innerHTML += `<br />
-            <a class="link-btn" href=${repo.html_url}>${devicons['Github']} Code</a>
+            <a class="link-btn" href="${repo.html_url}">${devicons['Github']} Code</a>
             <br />`;
         }
 
