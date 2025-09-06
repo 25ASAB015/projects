@@ -1,4 +1,3 @@
-const username = '25ASAB015';
 const maxPages = 3;
 const hideForks = true;
 const repoList = document.querySelector('.repo-list');
@@ -9,7 +8,7 @@ const filterInput = document.querySelector('.filter-repos');
 const getProfile = async () => {
     try {
         const res = await fetch(
-            `https://api.github.com/users/25Asab015`
+            `https://api.github.com/users/25ASAB015`
             // {
             //     headers: {
             //         Accept: 'application/vnd.github+json',
