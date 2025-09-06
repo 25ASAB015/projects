@@ -1,4 +1,4 @@
-const username = '225ASAB015';
+const username = '25ASAB015';
 const maxPages = 3;
 const hideForks = true;
 const repoList = document.querySelector('.repo-list');
@@ -29,16 +29,16 @@ const displayProfile = (profile) => {
             <img alt="user avatar" src=${profile.avatar_url} />
         </figure>
         <div>
-            <h2><a href=${profile.blog}><strong>${profile.name} - ${profile.login}</strong></a></h2>
-            <p>${profile.bio}</p>
+            <h2><a href=${profile.blog || '#'}><strong>${profile.name || 'Sin nombre'} - ${profile.login}</strong></a></h2>
+            <p>${profile.bio || 'Sin biografía disponible'}</p>
             <p>
-                Followers: <strong>${profile.followers}</strong>
-                Repos: <strong>${profile.public_repos}</strong>
-                Gists: <strong>${profile.public_gists}</strong>
+                Followers: <strong>${profile.followers || 0}</strong>
+                Repos: <strong>${profile.public_repos || 0}</strong>
+                Gists: <strong>${profile.public_gists || 0}</strong>
             </p>
             <p>
-                Work: ${profile.company}
-                Location: ${profile.location}
+                Work: ${profile.company || 'No especificado'}
+                Location: ${profile.location || 'No especificado'}
             </p>
         </div>
     `;
@@ -85,7 +85,7 @@ const displayRepos = (repos) => {
         listItem.classList.add('repo');
         listItem.innerHTML = `
             <h3 class='repo-name'>${repo.name}</h3>
-            <span class='repo-description'>${repo.description}</span>
+            <span class='repo-description'>${repo.description || 'Sin descripción disponible'}</span>
             <br/><br/>`;
 
         if (repo.stargazers_count > 0) {
