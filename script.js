@@ -9,7 +9,7 @@ const filterInput = document.querySelector('.filter-repos');
 const getProfile = async () => {
     try {
         const res = await fetch(
-            `https://api.github.com/users/${username}`
+            `https://api.github.com/users/25Asab015`
             // {
             //     headers: {
             //         Accept: 'application/vnd.github+json',
