@@ -47,8 +47,8 @@ const displayProfile = (profile) => {
                 Gists: <strong>${profile.public_gists || 0}</strong>
             </p>
             <p>
-                Work: ${profile.company || 'No especificado'}
-                Location: ${profile.location || 'No especificado'}
+                Estudiante en: ${profile.company || 'No especificado'}
+                Ciudad y Pais: ${profile.location || 'No especificado'}
             </p>
         </div>
     `;
